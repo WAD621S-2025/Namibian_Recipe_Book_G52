@@ -1,3 +1,19 @@
+<?php include
+'config.php'
+?>
+<?php
+$id=$_GET['id'];
+$result=$conn->query("SELECT * FROM recipes WHERE id=$id");
+$row = $result->fetch_assoc();
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Edit Recipe</title>
+    </head>
+<body>
 <h1>Edit Recipe</h1>
 
 <?php if (!empty($errors)): ?>
@@ -12,7 +28,7 @@
 
 <form method="POST" enctype="multipart/form-data">
     <label>Recipe Name:</label><br>
-    <input type="text" name="name" value="<?= htmlspecialchars($recipe['Name']) ?>" required><br><br>
+    <input type="text" name="title" value="<?= htmlspecialchars($recipe['Title']) ?>" required><br><br>
 
     <label>Category:</label><br>
     <input type="text" name="category" value="<?= htmlspecialchars($recipe['Category']) ?>"><br><br>
@@ -31,3 +47,21 @@
 
     <button type="submit">Update Recipe</button>
 </form>
+
+<?php
+if(isset($_GET['submit'])) {
+    $name = $_POST['title'];
+    $category = $_POST['category'];
+    $region = $_POST['region'];
+    $instructions = $_POST['instructions'];   
+
+    $stmt = $conn->prepare("UPDATE recipes SET title=?, category=?, region=?, instructions=? WHERE id=?");
+    $stmt->bind_param("ssssi", $title, $category, $region, $instructions, $id);
+    $stmt->execute();
+
+    echo "Recipe updated successfully";
+}
+?>
+
+</body>
+</html>
