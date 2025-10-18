@@ -1,3 +1,12 @@
+<?php include 'config.php';?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Recipe</title>
+</head>
+<body>
 <h1>Add New Recipe</h1>
 
 <?php if (!empty($errors)): ?>
@@ -28,3 +37,19 @@
 
     <button type="submit">Add Recipe</button>
 </form>
+
+<?php
+if (isset($_POST['submit'])) {
+    $title = $_POST['title'];
+    $ingredients = $_POST['ingredients'];
+    $instructions = $_POST['instructions'];
+
+    $stmt = $conn->prepare("INSERT INTO recipes (title, ingredients, instructions) VALUES (?, ?, ?)");
+    $stmt->bind_param("sss", $title, $ingredients, $instructions);
+    $stmt->execute();
+
+    echo "<p>Recipe added successfully!</p>";
+}
+?>
+</body>
+</html>

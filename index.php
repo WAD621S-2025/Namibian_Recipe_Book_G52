@@ -1,3 +1,12 @@
+<?php include 'config.php'; ?>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Namibian Recipe Book</title>
+</head>
+<body>
+    <h1>Namibian Recipes Book</h1>
+
 <?php
 require_once __DIR__ . '/config.php';
 require_once __DIR__ . '/shared/bootstrap.php';
@@ -61,3 +70,15 @@ switch ($page) {
 
 // Footer
 include __DIR__ . '/shared/footer.php';
+?>
+ <a href='add_recipe.php'>Add New Recipe</a>
+    <ul>
+        <?php
+        $result = $conn->query("SELECT * FROM recipes ORDER BY created_at DESC");
+        while ($row = $result->fetch_assoc()) {
+            echo "<li><a href='view_recipe.php?id={$row['id']}'>{$row['title']} ({$row['category']})</a></li>";
+        }
+        ?>
+    </ul>
+</body>
+</html>

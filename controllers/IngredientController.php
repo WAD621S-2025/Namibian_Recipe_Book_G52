@@ -13,6 +13,33 @@ class IngredientController
 
     public function add()
     {
+        $errors = [];
+        $success = '';
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $name = trim($_POST['name'] ?? '');
+            $quantity = trim($_POST['quantity'] ?? '');
+            $unit = trim($_POST['unit'] ?? '');
+            $recipeId = $_POST['recipeId'] ?? null;
+
+            if (empty($name)) {
+                $errors[] = 'Ingredient name is required.';
+            }
+            if (empty($quantity)) {
+                $errors[] = 'Quantity is required.';
+            }
+
+            if (empty($errors)) {
+                if ($this->ingredientModel->insert($name, $quantity, $unit, $recipeId)) {
+                    $success = 'Ingredient added successfully!';
+                    // Clear form
+                    $_POST = [];
+                } else {
+                    $errors[] = 'Failed to add ingredient.';
+                }
+            }
+        }
+
         include __DIR__ . '/../pages/Ingredient/add-ingredient.php';
     }
 
@@ -36,6 +63,31 @@ class IngredientController
     {
         if ($id) {
             $ingredient = $this->ingredientModel->getById($id);
+            $errors = [];
+            $success = '';
+
+            if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                $name = trim($_POST['name'] ?? '');
+                $quantity = trim($_POST['quantity'] ?? '');
+                $unit = trim($_POST['unit'] ?? '');
+
+                if (empty($name)) {
+                    $errors[] = 'Ingredient name is required.';
+                }
+                if (empty($quantity)) {
+                    $errors[] = 'Quantity is required.';
+                }
+
+                if (empty($errors)) {
+                    if ($this->ingredientModel->update($id, $name, $quantity, $unit)) {
+                        $success = 'Ingredient updated successfully!';
+                        $ingredient = $this->ingredientModel->getById($id); // Refresh data
+                    } else {
+                        $errors[] = 'Failed to update ingredient.';
+                    }
+                }
+            }
+
             include __DIR__ . '/../pages/Ingredient/edit-ingredient.php';
         } else {
             echo "<p>No ingredient selected to edit.</p>";

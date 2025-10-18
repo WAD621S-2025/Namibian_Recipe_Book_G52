@@ -15,17 +15,4 @@
     <button type="submit">Add Ingredient</button>
 </form>
 
-<?php
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $name = trim($_POST['name']);
-    $quantity = trim($_POST['quantity']);
-    $unit = trim($_POST['unit']);
-    $recipeId = $_POST['recipeId'] ?? null;
 
-    if ($name && $quantity) {
-        $ingredientModel = new Ingredient($pdo);
-        $ingredientModel->insert($name, $quantity, $unit, $recipeId);
-        echo "<p style='color:green;'>Ingredient added successfully!</p>";
-    }
-}
-?>

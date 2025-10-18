@@ -1,3 +1,10 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Hello, World!</title>
+    <link rel="stylesheet" href="home.css" />
+  </head>
+  <body>
 <?php
 $model = new Recipe($pdo);
 $recipes = $model->getAll();
@@ -28,12 +35,12 @@ $recipes = $model->getAll();
     <div class="recipe-grid">
         <?php foreach ($recipes as $recipe): ?>
             <div class="card">
-                <img src="<?= $recipe['Image'] ?? 'assets/images/placeholder.jpg' ?>" alt="<?= htmlspecialchars($recipe['Name']) ?>">
+                <img src="<?= $recipe['ImagePath'] ?? 'assets/images/placeholder.jpg' ?>" alt="<?= htmlspecialchars($recipe['Name']) ?>">
                 <div class="card-body">
                     <h3><?= htmlspecialchars($recipe['Name']) ?></h3>
                     <span class="badge"><?= htmlspecialchars($recipe['Category'] ?? 'Uncategorized') ?></span>
-                    <p><?= substr(htmlspecialchars($recipe['Description']), 0, 100) ?>...</p>
-                    <a href="index.php?page=recipe&id=<?= $recipe['RecipeID'] ?>" class="btn-secondary">View Recipe</a>
+                    <p><?= substr(htmlspecialchars($recipe['Instructions']), 0, 100) ?>...</p>
+                    <a href="index.php?page=single-recipe&id=<?= $recipe['RecipeID'] ?>" class="btn-secondary">View Recipe</a>
                 </div>
             </div>
         <?php endforeach; ?>
@@ -47,7 +54,7 @@ $recipes = $model->getAll();
             <div class="carousel-inner">
                 <?php foreach ($recipes as $recipe): ?>
                     <div class="card">
-                        <img src="<?= $recipe['Image'] ?? 'assets/images/placeholder.jpg' ?>" alt="">
+                        <img src="<?= $recipe['ImagePath'] ?? 'assets/images/placeholder.jpg' ?>" alt="">
                         <div class="card-content">
                             <h3><?= htmlspecialchars($recipe['Name']) ?></h3>
                             <span class="badge"><?= htmlspecialchars($recipe['Category'] ?? 'General') ?></span>
@@ -61,3 +68,5 @@ $recipes = $model->getAll();
 <?php else: ?>
     <p style="text-align:center;">No recipes found.</p>
 <?php endif; ?>
+  </body>
+</html>

@@ -1,3 +1,8 @@
+<?php include 'config.php';?>   
+
+<!DOCTYPE html>
+<head><title>All Recipes</title></head>
+<body>
 <h1>All Recipes</h1>
 
 <a href="?page=add-recipe">➕ Add New Recipe</a><br><br>
@@ -18,3 +23,6 @@
 <?php else: ?>
     <p>No recipes found.</p>
 <?php endif; ?>
+
+</body>
+</html>

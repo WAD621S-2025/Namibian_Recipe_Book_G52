@@ -8,4 +8,22 @@
     </div>
 </footer>
 
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const carousel = document.querySelector('.carousel-inner');
+    const prevBtn = document.querySelector('.prev');
+    const nextBtn = document.querySelector('.next');
+
+    if (carousel && prevBtn && nextBtn) {
+        prevBtn.addEventListener('click', () => {
+            carousel.scrollBy({ left: -220, behavior: 'smooth' });
+        });
+
+        nextBtn.addEventListener('click', () => {
+            carousel.scrollBy({ left: 220, behavior: 'smooth' });
+        });
+    }
+});
+</script>
+
 </html>
