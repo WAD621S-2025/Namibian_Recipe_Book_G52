@@ -1,0 +1,22 @@
+@import url("main.css");
+
+body {
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+}
+
+a.back-home {
+  text-decoration: none;
+  padding: 10px 24px;
+  border-radius: 999px;
+  border: 2px solid var(--button-color);
+  color: var(--button-color);
+  font-weight: 600;
+  transition: background-color 0.3s ease;
+}
+
+a.back-home:hover {
+  background-color: var(--button-color);
+  color: #ffffff;
+}

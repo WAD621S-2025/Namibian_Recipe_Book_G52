@@ -1,0 +1,54 @@
+@import url("main.css");
+
+/* Form container with border, shadow, padding */
+.form-container {
+    display: inline-block;
+    text-align: left;
+    margin: 20px auto;
+    padding: 20px;
+    border: 2px solid var(--button-color);
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+    max-width: 500px;
+    width: 90%;
+}
+
+/* Group each label + input/textarea */
+.form-container .form-group {
+    margin-bottom: 15px;
+}
+
+/* Inputs and textareas */
+.form-container input,
+.form-container textarea {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+}
+
+/* Buttons */
+.form-container button {
+    padding: 8px 16px;
+    border: none;
+    background-color: #006400;
+    color: white;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.form-container button:hover {
+    background-color: #008000;
+}
+
+/* Messages */
+.form-messages.error p {
+    color: red;
+    margin: 0;
+}
+
+.form-messages.success p {
+    color: green;
+    margin: 0;
+}

@@ -16,15 +16,18 @@ include __DIR__ . '/shared/header.php';
 switch ($page) {
     // Home
     case 'home':
-        include __DIR__ . '/pages/home.php';
+        $recipeController->home();
         break;
 
     // Recipes
     case 'add-recipe':
         $recipeController->add();
         break;
-    case 'list-recipes':
+    case 'all-recipes':
         $recipeController->showList();
+        break;
+    case 'search-recipes':
+        $recipeController->search();
         break;
     case 'single-recipe':
         $recipeController->singleRecipe($_GET['id'] ?? null);
@@ -52,11 +55,8 @@ switch ($page) {
     case 'delete-ingredient':
         $ingredientController->delete($_GET['id'] ?? null);
         break;
-
-    // Default
     default:
-        echo "<h1>Welcome to Namibian Recipe Book</h1><p>Browse traditional recipes from Namibia.</p>";
-        break;
+        echo "<h2>404 - Page Not Found</h2>";
 }
 
 // Footer
