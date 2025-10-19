@@ -1,47 +1,45 @@
 <?php
-include 'confiig.php';
-
-// Check if recipe ID is provided
-if (!isset($_GET['RecipeID'])) {
-    die("Recipe ID not specified.");
-}
-$recipe_id = intval($_GET['RecipeID']);
-
-// Handle form submission
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $name = $_POST['name'];
-    $quantity = $_POST['quantity'];
-    $unit = $_POST['unit'];
-
-    $stmt = $conn->prepare("INSERT INTO ingredients (RecipeID, name, quantity, unit) VALUES (?, ?, ?, ?)");
-    $stmt->bind_param("isss", $recipe_id, $name, $quantity, $unit);
-    $stmt->execute();
-
-    echo "<p>Ingredient added successfully!</p>";
-}
+include_once __DIR__ . '/../../shared/header.php';
+include_once __DIR__ . '/../../shared/nav.php';
 ?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add Ingredient</title>
-</head>
-<body>
-<h2>Add Ingredient to Recipe #<?php echo $recipe_id; ?></h2>
-<form method="POST">
-    <label>Ingredient Name:</label><br>
-    <input type="text" name="name" required><br><br>
+<link rel="stylesheet" href="assets/css/forms.css">
 
-    <label>Quantity:</label><br>
-    <input type="number" step="0.01" name="quantity" required><br><br>
+<div class="container text-center">
+    <h1>Add Ingredient</h1>
 
-    <label>Unit:</label><br>
-    <input type="text" name="unit" placeholder="e.g. grams, cups"><br><br>
+    <?php if (!empty($message)) : ?>
+        <div class="form-messages success">
+            <p><?= htmlspecialchars($message); ?></p>
+        </div>
+    <?php endif; ?>
 
-    <button type="submit">Add Ingredient</button>
-</form>
-</bod>
-</html>
+    <?php if (!empty($error)) : ?>
+        <div class="form-messages error">
+            <p><?= htmlspecialchars($error); ?></p>
+        </div>
+    <?php endif; ?>
 
+    <form method="POST" class="form-container">
+        <div class="form-group">
+            <label>Name:</label>
+            <input type="text" name="name" required value="<?= htmlspecialchars($_POST['name'] ?? ''); ?>">
+        </div>
 
+        <div class="form-group">
+            <label>Quantity:</label>
+            <input type="number" step="0.01" name="quantity" required value="<?= htmlspecialchars($_POST['quantity'] ?? ''); ?>">
+        </div>
+
+        <div class="form-group">
+            <label>Unit:</label>
+            <input type="text" name="unit" placeholder="e.g. grams, cups" value="<?= htmlspecialchars($_POST['unit'] ?? ''); ?>">
+        </div>
+
+        <div class="form-group">
+            <label>Recipe ID (optional):</label>
+            <input type="number" name="recipeId" value="<?= htmlspecialchars($_POST['recipeId'] ?? ''); ?>">
+        </div>
+
+        <button type="submit">Add Ingredient</button>
+    </form>
+</div>

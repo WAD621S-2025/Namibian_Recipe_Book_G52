@@ -1,55 +1,52 @@
-<?php include 'config.php';?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add Recipe</title>
-</head>
-<body>
-<h1>Add New Recipe</h1>
-
-<?php if (!empty($errors)): ?>
-    <?php foreach ($errors as $error): ?>
-        <p style="color: red;"><?= htmlspecialchars($error) ?></p>
-    <?php endforeach; ?>
-<?php endif; ?>
-
-<?php if (!empty($success)): ?>
-    <p style="color: green;"><?= htmlspecialchars($success) ?></p>
-<?php endif; ?>
-
-<form method="POST" enctype="multipart/form-data">
-    <label>Recipe Name:</label><br>
-    <input type="text" name="name" required><br><br>
-
-    <label>Category:</label><br>
-    <input type="text" name="category" placeholder="e.g. Dessert, Main Dish"><br><br>
-
-    <label>Region:</label><br>
-    <input type="text" name="region" placeholder="e.g. Oshiwambo, Herero, Nama"><br><br>
-
-    <label>Instructions:</label><br>
-    <textarea name="instructions" rows="6" required></textarea><br><br>
-
-    <label>Image:</label><br>
-    <input type="file" name="image" accept="image/*"><br><br>
-
-    <button type="submit">Add Recipe</button>
-</form>
-
 <?php
-if (isset($_POST['submit'])) {
-    $title = $_POST['title'];
-    $ingredients = $_POST['ingredients'];
-    $instructions = $_POST['instructions'];
-
-    $stmt = $conn->prepare("INSERT INTO recipes (title, ingredients, instructions) VALUES (?, ?, ?)");
-    $stmt->bind_param("sss", $title, $ingredients, $instructions);
-    $stmt->execute();
-
-    echo "<p>Recipe added successfully!</p>";
-}
+include_once __DIR__ . '/../../shared/header.php';
+include_once __DIR__ . '/../../shared/nav.php';
 ?>
-</body>
-</html>
+<link rel="stylesheet" href="assets/css/forms.css">
+
+<div class="container text-center">
+    <h1>Add New Recipe</h1>
+
+    <?php if (!empty($errors)): ?>
+        <div class="form-messages error">
+            <?php foreach ($errors as $error): ?>
+                <p><?= htmlspecialchars($error) ?></p>
+            <?php endforeach; ?>
+        </div>
+    <?php endif; ?>
+
+    <?php if (!empty($success)): ?>
+        <div class="form-messages success">
+            <p><?= htmlspecialchars($success) ?></p>
+        </div>
+    <?php endif; ?>
+
+    <form method="POST" enctype="multipart/form-data" class="form-container">
+        <div class="form-group">
+            <label>Recipe Name:</label>
+            <input type="text" name="name" required>
+        </div>
+
+        <div class="form-group">
+            <label>Category:</label>
+            <input type="text" name="category" placeholder="e.g. Dessert, Main Dish">
+        </div>
+
+        <div class="form-group">
+            <label>Region:</label>
+            <input type="text" name="region" placeholder="e.g. Oshiwambo, Herero, Nama">
+        </div>
+
+        <div class="form-group">
+            <label>Instructions:</label>
+            <textarea name="instructions" rows="6" required></textarea>
+        </div>
+
+        <div class="form-group">
+            <label>Image:</label>
+            <input type="file" name="image" accept="image/*">
+        </div>
+
+        <button type="submit">Add Recipe</button>
+    </form>
+</div>

@@ -1,67 +1,53 @@
-<?php include
-'config.php'
-?>
 <?php
-$id=$_GET['id'];
-$result=$conn->query("SELECT * FROM recipes WHERE id=$id");
-$row = $result->fetch_assoc();
+include_once __DIR__ . '/../../shared/header.php';
+include_once __DIR__ . '/../../shared/nav.php';
 ?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Edit Recipe</title>
-    </head>
-<body>
-<h1>Edit Recipe</h1>
+<link rel="stylesheet" href="assets/css/forms.css">
 
-<?php if (!empty($errors)): ?>
-    <?php foreach ($errors as $error): ?>
-        <p style="color: red;"><?= htmlspecialchars($error) ?></p>
-    <?php endforeach; ?>
-<?php endif; ?>
+<div class="container text-center">
+    <div class="form-container">
+        <h2>Edit Recipe</h2>
 
-<?php if (!empty($success)): ?>
-    <p style="color: green;"><?= htmlspecialchars($success) ?></p>
-<?php endif; ?>
+        <?php if (!empty($error)): ?>
+            <div class="form-messages error">
+                <p><?= htmlspecialchars($error) ?></p>
+            </div>
+        <?php elseif (!empty($success)): ?>
+            <div class="form-messages success">
+                <p><?= htmlspecialchars($success) ?></p>
+            </div>
+        <?php endif; ?>
 
-<form method="POST" enctype="multipart/form-data">
-    <label>Recipe Name:</label><br>
-    <input type="text" name="title" value="<?= htmlspecialchars($recipe['Title']) ?>" required><br><br>
+        <form action="" method="POST" enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="name">Recipe Name</label>
+                <input type="text" id="name" name="name" value="<?= htmlspecialchars($recipe['Name']) ?>" required>
+            </div>
 
-    <label>Category:</label><br>
-    <input type="text" name="category" value="<?= htmlspecialchars($recipe['Category']) ?>"><br><br>
+            <div class="form-group">
+                <label for="category">Category</label>
+                <input type="text" id="category" name="category" value="<?= htmlspecialchars($recipe['Category']) ?>" required>
+            </div>
 
-    <label>Region:</label><br>
-    <input type="text" name="region" value="<?= htmlspecialchars($recipe['Region']) ?>"><br><br>
+            <div class="form-group">
+                <label for="region">Region</label>
+                <input type="text" id="region" name="region" value="<?= htmlspecialchars($recipe['Region']) ?>" required>
+            </div>
 
-    <label>Instructions:</label><br>
-    <textarea name="instructions" rows="6" required><?= htmlspecialchars($recipe['Instructions']) ?></textarea><br><br>
+            <div class="form-group">
+                <label for="instructions">Instructions</label>
+                <textarea id="instructions" name="instructions" rows="5" required><?= htmlspecialchars($recipe['Instructions']) ?></textarea>
+            </div>
 
-    <label>Image:</label><br>
-    <?php if (!empty($recipe['ImagePath'])): ?>
-        <img src="<?= $recipe['ImagePath'] ?>" width="150"><br>
-    <?php endif; ?>
-    <input type="file" name="image" accept="image/*"><br><br>
+            <div class="form-group">
+                <label for="image">Recipe Image</label><br>
+                <?php if (!empty($recipe['ImagePath'])): ?>
+                    <img src="<?= htmlspecialchars($recipe['ImagePath']) ?>" alt="Recipe Image" width="150"><br><br>
+                <?php endif; ?>
+                <input type="file" id="image" name="image">
+            </div>
 
-    <button type="submit">Update Recipe</button>
-</form>
-
-<?php
-if(isset($_GET['submit'])) {
-    $name = $_POST['title'];
-    $category = $_POST['category'];
-    $region = $_POST['region'];
-    $instructions = $_POST['instructions'];   
-
-    $stmt = $conn->prepare("UPDATE recipes SET title=?, category=?, region=?, instructions=? WHERE id=?");
-    $stmt->bind_param("ssssi", $title, $category, $region, $instructions, $id);
-    $stmt->execute();
-
-    echo "Recipe updated successfully";
-}
-?>
-
-</body>
-</html>
+            <button type="submit">Update Recipe</button>
+        </form>
+    </div>
+</div>

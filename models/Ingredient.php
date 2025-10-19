@@ -8,6 +8,18 @@ class Ingredient
         $this->pdo = $pdo;
     }
 
+    public function getByRecipeId($recipeId)
+    {
+        $stmt = $this->pdo->prepare("
+            SELECT IngredientID, Name, Quantity, Unit 
+            FROM ingredients 
+            WHERE RecipeID = ?
+            ORDER BY CreatedAt ASC
+        ");
+        $stmt->execute([$recipeId]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
     public function getAll()
     {
         $stmt = $this->pdo->query("SELECT * FROM ingredients ORDER BY CreatedAt DESC");

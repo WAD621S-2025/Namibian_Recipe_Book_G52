@@ -5,6 +5,7 @@ class RecipeController
 {
     private $pdo;
     private $model;
+    private $ingredientController;
 
     public function __construct($pdo)
     {
@@ -18,41 +19,39 @@ class RecipeController
         $errors = [];
         $success = '';
 
+        // Handle form submission
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $name = trim($_POST['name'] ?? '');
-            $category = trim($_POST['category'] ?? '');
-            $region = trim($_POST['region'] ?? '');
-            $instructions = trim($_POST['instructions'] ?? '');
-            $imagePath = '';
+            $name = $_POST['name'] ?? '';
+            $category = $_POST['category'] ?? '';
+            $region = $_POST['region'] ?? '';
+            $instructions = $_POST['instructions'] ?? '';
+            $imagePath = null;
 
-            if (empty($name)) {
-                $errors[] = 'Recipe name is required.';
-            }
-            if (empty($instructions)) {
-                $errors[] = 'Instructions are required.';
-            }
-
-            if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
-                $uploadDir = __DIR__ . '/../assets/uploads/recipes/';
-                if (!is_dir($uploadDir)) {
-                    mkdir($uploadDir, 0755, true);
-                }
+            // Handle image upload
+            if (!empty($_FILES['image']['name'])) {
+                $targetDir = __DIR__ . '/../assets/uploads/recipes';
                 $fileName = time() . '_' . basename($_FILES['image']['name']);
-                $targetFile = $uploadDir . $fileName;
+                $targetFile = $targetDir . $fileName;
+
                 if (move_uploaded_file($_FILES['image']['tmp_name'], $targetFile)) {
-                    $imagePath = 'assets/uploads/recipes/' . $fileName;
+                    $imagePath = $fileName;
                 } else {
-                    $errors[] = 'Failed to upload image.';
+                    $errors[] = "Image upload failed.";
                 }
             }
 
+            // Simple validation
+            if (empty($name) || empty($instructions)) {
+                $errors[] = "Please fill in all required fields.";
+            }
+
+            // If no errors → Insert into DB
             if (empty($errors)) {
-                if ($this->model->insert($name, $instructions, $category, $region, $imagePath)) {
-                    $success = 'Recipe added successfully!';
-                    // Clear form
-                    $_POST = [];
+                $inserted = $this->model->insert($name, $instructions, $category, $region, $imagePath);
+                if ($inserted) {
+                    $success = "Recipe added successfully!";
                 } else {
-                    $errors[] = 'Failed to add recipe.';
+                    $errors[] = "Failed to add recipe.";
                 }
             }
         }
@@ -67,54 +66,81 @@ class RecipeController
         include __DIR__ . '/../pages/recipes/all-recipes.php';
     }
 
+    // Show home page with featured recipes
+    public function home()
+    {
+        $featuredRecipes = $this->model->getFeatured(6);
+        include __DIR__ . '/../pages/home.php';
+    }
+
+    // Search recipes
+    public function search()
+    {
+        $searchTerm = $_GET['search'] ?? '';
+        $recipes = $searchTerm ? $this->model->search($searchTerm) : $this->model->getAll();
+        include __DIR__ . '/../pages/recipes/all-recipes.php';
+    }
+
     // Show single recipe
     public function singleRecipe($id)
     {
+        require_once __DIR__ . '/../models/Ingredient.php';
+
+        // Fetch recipe
         $recipe = $this->model->getById($id);
+
+        $ingredientModel = new Ingredient($this->pdo);
+        $ingredients = $ingredientModel->getByRecipeId($id);
+
         include __DIR__ . '/../pages/recipes/recipe.php';
     }
+
 
     // Edit recipe
     public function edit($id)
     {
         $recipe = $this->model->getById($id);
-        $errors = [];
+        $error = '';
         $success = '';
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $name = trim($_POST['name'] ?? '');
-            $category = trim($_POST['category'] ?? '');
-            $region = trim($_POST['region'] ?? '');
-            $instructions = trim($_POST['instructions'] ?? '');
-            $imagePath = $recipe['ImagePath'] ?? '';
+            $name = $_POST['name'] ?? '';
+            $category = $_POST['category'] ?? '';
+            $region = $_POST['region'] ?? '';
+            $instructions = $_POST['instructions'] ?? '';
+            $imagePath = $recipe['ImagePath']; // Keep old image by default
 
-            if (empty($name)) {
-                $errors[] = 'Recipe name is required.';
-            }
-            if (empty($instructions)) {
-                $errors[] = 'Instructions are required.';
+            // Define upload directory
+            $uploadDir = __DIR__ . '/../assets/uploads/recipes/';
+            $relativeDir = 'assets/uploads/recipes/';
+
+            // Ensure folder exists
+            if (!is_dir($uploadDir)) {
+                mkdir($uploadDir, 0777, true);
             }
 
-            if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
-                $uploadDir = __DIR__ . '/../assets/uploads/recipes/';
-                if (!is_dir($uploadDir)) {
-                    mkdir($uploadDir, 0755, true);
-                }
+            // Handle image upload if new image is selected
+            if (!empty($_FILES['image']['name'])) {
                 $fileName = time() . '_' . basename($_FILES['image']['name']);
                 $targetFile = $uploadDir . $fileName;
+
                 if (move_uploaded_file($_FILES['image']['tmp_name'], $targetFile)) {
-                    $imagePath = 'assets/uploads/recipes/' . $fileName;
+                    // Save relative path for database
+                    $imagePath = $relativeDir . $fileName;
                 } else {
-                    $errors[] = 'Failed to upload image.';
+                    $error = " Image upload failed. Check folder permissions or path.";
                 }
             }
 
-            if (empty($errors)) {
-                if ($this->model->update($id, $name, $instructions, $category, $region, $imagePath)) {
-                    $success = 'Recipe updated successfully!';
-                    $recipe = $this->model->getById($id); // Refresh data
+            // Update recipe if no errors
+            if (!$error) {
+                $updated = $this->model->update($id, $name, $instructions, $category, $region, $imagePath);
+
+                if ($updated) {
+                    $success = "Recipe updated successfully!";
+                    $recipe = $this->model->getById($id);
                 } else {
-                    $errors[] = 'Failed to update recipe.';
+                    $error = " Failed to update recipe in the database.";
                 }
             }
         }

@@ -11,31 +11,35 @@ class IngredientController
         $this->ingredientModel = new Ingredient($pdo);
     }
 
+    // Display Add Ingredient Form & Handle POST
     public function add()
     {
-        $errors = [];
-        $success = '';
+
+        $message = '';
+        $error = '';
+
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $name = trim($_POST['name'] ?? '');
             $quantity = trim($_POST['quantity'] ?? '');
             $unit = trim($_POST['unit'] ?? '');
-            $recipeId = $_POST['recipeId'] ?? null;
+            $recipeId = !empty($_POST['recipeId']) ? (int)$_POST['recipeId'] : null;
 
+            // Validation
             if (empty($name)) {
-                $errors[] = 'Ingredient name is required.';
-            }
-            if (empty($quantity)) {
-                $errors[] = 'Quantity is required.';
-            }
-
-            if (empty($errors)) {
-                if ($this->ingredientModel->insert($name, $quantity, $unit, $recipeId)) {
-                    $success = 'Ingredient added successfully!';
-                    // Clear form
-                    $_POST = [];
+                $error = "Name is required.";
+            } elseif (!is_numeric($quantity) || $quantity <= 0) {
+                $error = "Quantity must be a positive number.";
+            } else {
+                // Insert ingredient
+                $inserted = $this->ingredientModel->insert($name, $quantity, $unit, $recipeId);
+                if ($inserted) {
+                    $message = "Ingredient added successfully!";
+                    // Optionally, redirect to list page:
+                    // header("Location: index.php?page=list-ingredients&status=added");
+                    // exit;
                 } else {
-                    $errors[] = 'Failed to add ingredient.';
+                    $error = "Failed to add ingredient. Please try again.";
                 }
             }
         }
@@ -46,6 +50,7 @@ class IngredientController
     public function showList()
     {
         $ingredients = $this->ingredientModel->getAll();
+        $status = $_GET['status'] ?? '';
         include __DIR__ . '/../pages/Ingredient/all-ingredient.php';
     }
 
@@ -98,7 +103,7 @@ class IngredientController
     {
         if ($id) {
             $this->ingredientModel->delete($id);
-            header("Location: index.php?page=list-ingredients");
+            header("Location: index.php?page=list-ingredients&status=deleted");
             exit;
         } else {
             echo "<p>No ingredient selected to delete.</p>";

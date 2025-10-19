@@ -1,0 +1,16 @@
+@import url("main.css");
+
+form {
+    max-width: 520px;
+    margin-left: 20px;
+}
+
+textarea {
+    min-height: 220px;
+    resize: vertical;
+}
+
+button {
+    width: 40%;
+    margin-top: 10px;
+}
