@@ -50,17 +50,7 @@ body {
     margin-bottom: 10px;
 }
 
-.hero .btn-primary {
-    background: #ff9800;
-    color: white;
-    padding: 10px 20px;
-    border-radius: 8px;
-    text-decoration: none;
-}
 
-.hero .btn-primary:hover {
-    background: #e68900;
-}
 
 /* Cards */
 .recipe-grid {

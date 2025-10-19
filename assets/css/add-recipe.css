@@ -1,0 +1,53 @@
+@import url("main.css");
+
+.add-recipe-form {
+  display: inline-block;
+  text-align: left;
+  margin-top: 20px;
+  padding: 20px;
+  border: 2px solid black;
+  /* border around form */
+  border-radius: 10px;
+  /* rounded corners */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  /* subtle shadow for depth */
+  background-color: #fff;
+  /* optional: white background */
+}
+
+.add-recipe-form .form-group {
+  margin-bottom: 15px;
+}
+
+.add-recipe-form input,
+.add-recipe-form textarea {
+  width: 100%;
+  max-width: 400px;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+.add-recipe-form button {
+  padding: 8px 16px;
+  border: none;
+  background-color: #006400;
+  color: white;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.add-recipe-form button:hover {
+  background-color: #008000;
+}
+
+/* Messages styling */
+.form-messages.error p {
+  color: red;
+  margin: 0;
+}
+
+.form-messages.success p {
+  color: green;
+  margin: 0;
+}
