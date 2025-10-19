@@ -1,3 +1,10 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Hello, World!</title>
+    <link rel="stylesheet" href="home.css" />
+  </head>
+  <body>
 <?php
 include_once __DIR__ . '/../shared/nav.php';
 ?>
