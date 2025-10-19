@@ -1,4 +1,6 @@
 <?php
+require_once __DIR__ . '/../models/Ingredient.php';
+
 class IngredientController
 {
     private $pdo;
@@ -7,12 +9,42 @@ class IngredientController
     public function __construct($pdo)
     {
         $this->pdo = $pdo;
-        require_once __DIR__ . '/../models/Ingredient.php';
         $this->ingredientModel = new Ingredient($pdo);
     }
 
     public function add()
     {
+<<<<<<< Updated upstream
+=======
+        $message = '';
+        $error = '';
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $name = trim($_POST['name'] ?? '');
+            $quantity = trim($_POST['quantity'] ?? '');
+            $unit = trim($_POST['unit'] ?? '');
+            $recipeId = !empty($_POST['recipeId']) ? (int)$_POST['recipeId'] : null;
+
+            // Validation
+            if (empty($name)) {
+                $error = "Name is required.";
+            } elseif (!is_numeric($quantity) || $quantity <= 0) {
+                $error = "Quantity must be a positive number.";
+            } else {
+                // Insert ingredient
+                $inserted = $this->ingredientModel->insert($name, $quantity, $unit, $recipeId);
+                if ($inserted) {
+                    $message = "Ingredient added successfully!";
+                    // Optionally, redirect to list page:
+                    // header("Location: index.php?page=list-ingredients&status=added");
+                    // exit;
+                } else {
+                    $error = "Failed to add ingredient. Please try again.";
+                }
+            }
+        }
+
+>>>>>>> Stashed changes
         include __DIR__ . '/../pages/Ingredient/add-ingredient.php';
     }
 
@@ -51,5 +83,10 @@ class IngredientController
         } else {
             echo "<p>No ingredient selected to delete.</p>";
         }
+    }
+
+    public function getIngredientsByRecipeId($recipeId)
+    {
+        return $this->ingredientModel->getByRecipeId($recipeId);
     }
 }
