@@ -2,29 +2,27 @@
 
 /* Hero Section */
 .hero {
-    background-image: url(../uploads/recipes1760790174_Poitjie2.png);
+    background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)),url(../images/Landscape.png);    
     background-size: cover;    /* makes sure image covers full area */
     background-position: center;    /* centers the image */
     background-repeat: repeat;    /* prevents tiling */
     padding: 80px 0;
     text-align: center;
     margin-bottom: 60px;
-    color: var(--text-color);    /* makes text readable */
+    color: var(--default);    /* makes text readable */
 }
-.hero background-image{
-    opacity: 10%;
-}
+
 .hero-content h1 {
     font-size: 48px;
     font-weight: 700;
     margin-bottom: 20px;
-    color: var(--text-color);
+    color: var(--default);    /* makes text readable */
 }
 
 .hero-content p {
     font-size: 20px;
     margin-bottom: 40px;
-    color: #666;
+    color: var(--default);    /* makes text readable */
     max-width: 600px;
     margin-left: auto;
     margin-right: auto;
@@ -38,10 +36,6 @@
 }
 
 /* Featured Recipes Section */
-.featured-recipes {
-    padding: 60px 0;
-}
-
 .featured-recipes h2 {
     text-align: center;
     font-size: 36px;
@@ -157,20 +151,20 @@
     .hero-content h1 {
         font-size: 36px;
     }
-    
+
     .hero-content p {
         font-size: 18px;
     }
-    
+
     .hero-actions {
         flex-direction: column;
         align-items: center;
     }
-    
+
     .recipe-grid {
         grid-template-columns: 1fr;
     }
-    
+
     .action-grid {
         grid-template-columns: 1fr;
     }

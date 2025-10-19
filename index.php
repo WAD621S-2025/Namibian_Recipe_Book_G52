@@ -71,14 +71,6 @@ switch ($page) {
 // Footer
 include __DIR__ . '/shared/footer.php';
 ?>
- <a href='add_recipe.php'>Add New Recipe</a>
-    <ul>
-        <?php
-        $result = $conn->query("SELECT * FROM recipes ORDER BY created_at DESC");
-        while ($row = $result->fetch_assoc()) {
-            echo "<li><a href='view_recipe.php?id={$row['id']}'>{$row['title']} ({$row['category']})</a></li>";
-        }
-        ?>
-    </ul>
+
 </body>
 </html>

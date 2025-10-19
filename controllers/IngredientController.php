@@ -1,4 +1,6 @@
 <?php
+require_once __DIR__ . '/../models/Ingredient.php';
+
 class IngredientController
 {
     private $pdo;
@@ -7,18 +9,12 @@ class IngredientController
     public function __construct($pdo)
     {
         $this->pdo = $pdo;
-        require_once __DIR__ . '/../models/Ingredient.php';
         $this->ingredientModel = new Ingredient($pdo);
     }
 
     // Display Add Ingredient Form & Handle POST
     public function add()
     {
-
-        $message = '';
-        $error = '';
-
-
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $name = trim($_POST['name'] ?? '');
             $quantity = trim($_POST['quantity'] ?? '');
@@ -43,7 +39,6 @@ class IngredientController
                 }
             }
         }
-
         include __DIR__ . '/../pages/Ingredient/add-ingredient.php';
     }
 
@@ -108,5 +103,10 @@ class IngredientController
         } else {
             echo "<p>No ingredient selected to delete.</p>";
         }
+    }
+
+    public function getIngredientsByRecipeId($recipeId)
+    {
+        return $this->ingredientModel->getByRecipeId($recipeId);
     }
 }

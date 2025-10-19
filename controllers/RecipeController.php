@@ -27,16 +27,25 @@ class RecipeController
             $instructions = $_POST['instructions'] ?? '';
             $imagePath = null;
 
-            // Handle image upload
+              // Define upload directory
+            $uploadDir = __DIR__ . '/../assets/uploads/recipes/';
+            $relativeDir = 'assets/uploads/recipes/';
+
+            // Ensure folder exists
+            if (!is_dir($uploadDir)) {
+                mkdir($uploadDir, 0777, true);
+            }
+
+            // Handle image upload if new image is selected
             if (!empty($_FILES['image']['name'])) {
-                $targetDir = __DIR__ . '/../assets/uploads/recipes';
                 $fileName = time() . '_' . basename($_FILES['image']['name']);
-                $targetFile = $targetDir . $fileName;
+                $targetFile = $uploadDir . $fileName;
 
                 if (move_uploaded_file($_FILES['image']['tmp_name'], $targetFile)) {
-                    $imagePath = $fileName;
+                    // Save relative path for database
+                    $imagePath = $relativeDir . $fileName;
                 } else {
-                    $errors[] = "Image upload failed.";
+                    $error = " Image upload failed. Check folder permissions or path.";
                 }
             }
 
@@ -55,7 +64,6 @@ class RecipeController
                 }
             }
         }
-
         include __DIR__ . '/../pages/recipes/add-recipe.php';
     }
 
